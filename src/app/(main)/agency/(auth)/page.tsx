@@ -1,17 +1,13 @@
+import { verifyAndAcceptInvitation } from '@/lib/queries'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Agency = async() => {
 
-  const authUser=await currentUser()
-  console.log(authUser)
-
-  if(!authUser)
-    {
-      redirect("/sign-in")
-    }
-
+  const agencyId=await verifyAndAcceptInvitation()
+  console.log(agencyId)
+  
   return (
     <div>Agency</div>
   )
