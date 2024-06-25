@@ -43,9 +43,11 @@ import {
   initUser,
   saveActivityLogsNotification,
   updateAgencyDetails,
+  upsertAgency,
 } from "@/lib/queries";
 import { Button } from "../ui/button";
 import Loading from "../loading/loading";
+import { v4 } from "uuid";
 
 interface AgencyDetailsProps {
   data?: Partial<Agency>;
@@ -126,12 +128,42 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
             state: values.zipCode,
           },
         };
-
-        //Wip: Cust id
-
-        newUserData = await initUser({ role: "AGENCY_OWNER" });
       }
-    } catch (error) {}
+      //Wip: Cust id
+
+      newUserData = await initUser({ role: "AGENCY_OWNER" });
+
+      if (!data?.id) {
+        const response = await upsertAgency({
+          id: data?.id ? data.id : v4(),
+          address: values.address,
+          agencyLogo: values.agencyLogo,
+          city: values.city,
+          companyPhone: values.companyPhone,
+          country: values.country,
+          name: values.name,
+          state: values.state,
+          whiteLabel: values.whiteLabel,
+          zipCode: values.zipCode,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          companyEmail: values.companyEmail,
+          connectAccountId: "",
+          goal: 5,
+        });
+        toast({
+          title: "Created Agency",
+        });
+        return router.refresh();
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Oppse!",
+        description: "could not create your agency ",
+      });
+    }
   };
 
   const handleDeleteAgency = async () => {
