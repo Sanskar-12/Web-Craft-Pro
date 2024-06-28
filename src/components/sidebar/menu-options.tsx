@@ -6,7 +6,7 @@ import {
   SubAccountSidebarOption,
 } from "@prisma/client";
 import { useEffect, useMemo, useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Menu, Compass, ChevronsUpDown } from "lucide-react";
 import clsx from "clsx";
@@ -138,11 +138,82 @@ const MenuOptions = ({
                               </div>
                             </Link>
                           ) : (
-                            <div></div>
+                            <SheetClose asChild>
+                              <Link
+                                href={`/agency/${user?.Agency?.id}`}
+                                className="flex gap-4 w-full h-full"
+                              >
+                                <div className="relative w-16">
+                                  <Image
+                                    src={user?.Agency?.agencyLogo}
+                                    alt="Agency Logo"
+                                    fill
+                                    className="rounded-md object-contain"
+                                  />
+                                </div>
+                                <div className="flex flex-col flex-1">
+                                  {user?.Agency?.name}
+                                  <span className="text-muted-foreground">
+                                    {user?.Agency?.address}
+                                  </span>
+                                </div>
+                              </Link>
+                            </SheetClose>
                           )}
                         </CommandItem>
                       </CommandGroup>
                     )}
+                  <CommandGroup heading="Accounts">
+                    {!!subAccounts
+                      ? subAccounts.map((subaccount) => (
+                          <CommandItem key={subaccount.id}>
+                            {defaultOpen ? (
+                              <Link
+                                href={`/subaccount/${subaccount.id}`}
+                                className="flex gap-4 w-full h-full"
+                              >
+                                <div className="relative w-16">
+                                  <Image
+                                    src={subaccount.subAccountLogo}
+                                    alt="subaccount Logo"
+                                    fill
+                                    className="rounded-md object-contain"
+                                  />
+                                </div>
+                                <div className="flex flex-col flex-1">
+                                  {subaccount.name}
+                                  <span className="text-muted-foreground">
+                                    {subaccount.address}
+                                  </span>
+                                </div>
+                              </Link>
+                            ) : (
+                              <SheetClose asChild>
+                                <Link
+                                  href={`/subaccount/${subaccount.id}`}
+                                  className="flex gap-4 w-full h-full"
+                                >
+                                  <div className="relative w-16">
+                                    <Image
+                                      src={subaccount.subAccountLogo}
+                                      alt="subaccount Logo"
+                                      fill
+                                      className="rounded-md object-contain"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col flex-1">
+                                    {subaccount.name}
+                                    <span className="text-muted-foreground">
+                                      {subaccount.address}
+                                    </span>
+                                  </div>
+                                </Link>
+                              </SheetClose>
+                            )}
+                          </CommandItem>
+                        ))
+                      : "No accounts."}
+                  </CommandGroup>
                 </CommandList>
               </Command>
             </PopoverContent>
