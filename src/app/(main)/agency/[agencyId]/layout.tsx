@@ -42,6 +42,7 @@ const LayoutPage = async ({ children, params }: LayoutProps) => {
     type="agency"
     />
     <div className="md:pl-[300px]">
+      {children}
     </div>
   </div>;
 };
