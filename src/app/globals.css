@@ -2,6 +2,31 @@
   @tailwind components;
   @tailwind utilities;
 
+  body {
+    overflow: hidden;
+  }
+  
+  /* For specific elements */
+  .no-scrollbar {
+    overflow: hidden;
+  }
+  
+  /* Webkit-based browsers (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  
+  /* Firefox */
+  * {
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  /* Internet Explorer 10+ */
+  * {
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
   @layer base {
     :root {
       --background: 0 0% 100%;
