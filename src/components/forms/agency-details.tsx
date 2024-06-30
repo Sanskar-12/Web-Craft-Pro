@@ -72,7 +72,6 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
-  console.log(data);
 
   const [deletingAgency, setDeletingAgency] = useState(false);
 
