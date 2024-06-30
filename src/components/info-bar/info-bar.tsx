@@ -17,6 +17,7 @@ import { Bell } from "lucide-react";
 import { Card } from "../ui/card";
 import { Switch } from "../ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ModeToggle } from "../mode-toggle/mode-toggle";
 
 interface InfoBarProps {
   notifications: NotificationWithUser | [];
@@ -32,7 +33,6 @@ const InfoBar = ({
   subAccountId,
 }: InfoBarProps) => {
 
-    console.log(role)
   const [allNotifications, setAllNotifications] = useState(notifications);
   const [showAll, setShowAll] = useState(true);
 
@@ -124,6 +124,7 @@ const InfoBar = ({
               )}
             </SheetContent>
           </Sheet>
+          <ModeToggle/>
         </div>
       </div>
     </>

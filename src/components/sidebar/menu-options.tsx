@@ -226,7 +226,7 @@ const MenuOptions = ({
                   user?.role === "AGENCY_ADMIN") && (
                   <SheetClose>
                     <Button
-                      className="w-full flex gap-2 bg-blue-400 hover:bg-blue-500"
+                      className="w-full flex gap-2 bg-primary"
                       onClick={() => {
                         setOpen(
                           <CustomModal
