@@ -432,3 +432,30 @@ export const updateUser=async(user:Partial<User>)=>{
 
   return response
 }
+
+export const chageUserPermission=async(
+  permissionId:string | undefined,
+  userEmail:string,
+  subaccountId:string,
+  permission:boolean
+)=>{  
+  try {
+    const response=await db.permission.upsert({
+      where:{
+        id:permissionId,
+      },
+      update:{
+        access:permission
+      },
+      create:{
+        access:permission,
+        email:userEmail,
+        subAccountId:subaccountId
+      }
+    })
+
+    return response
+  } catch (error) {
+    console.log('🔴Could not change persmission', error)
+  }
+}
