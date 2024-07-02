@@ -69,6 +69,7 @@ const UserDetails = ({ id, type, userData, subAccounts }: UserDetailsProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
+
   useEffect(() => {
     if (data?.user) {
       const fetchDetails = async () => {
