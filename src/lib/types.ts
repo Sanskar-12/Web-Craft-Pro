@@ -1,5 +1,5 @@
 import { Notification, Prisma, Role } from "@prisma/client";
-import { getAuthUserDetails, getUserPermissions } from "./queries";
+import { getAuthUserDetails, getMedia, getUserPermissions } from "./queries";
 import { db } from "./db";
 
 export type NotificationWithUser =
@@ -17,10 +17,9 @@ export type NotificationWithUser =
     } & Notification)[]
   | undefined;
 
-
-export type UserWithPermissionAndSubAccounts=Prisma.PromiseReturnType<
-typeof getUserPermissions
-> 
+export type UserWithPermissionAndSubAccounts = Prisma.PromiseReturnType<
+  typeof getUserPermissions
+>;
 
 const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
   agencyId: string
@@ -31,14 +30,15 @@ const __getUsersWithAgencySubAccountPermissionsSidebarOptions = async (
       Agency: { include: { SubAccount: true } },
       Permissions: { include: { SubAccount: true } },
     },
-  })
-}
-
+  });
+};
 
 export type AuthUserWithAgencySigebarOptionsSubAccounts =
-  Prisma.PromiseReturnType<typeof getAuthUserDetails>
+  Prisma.PromiseReturnType<typeof getAuthUserDetails>;
 
-  export type UsersWithAgencySubAccountPermissionsSidebarOptions =
+export type UsersWithAgencySubAccountPermissionsSidebarOptions =
   Prisma.PromiseReturnType<
     typeof __getUsersWithAgencySubAccountPermissionsSidebarOptions
-  >
+  >;
+
+export type GetMediaFiles = Prisma.PromiseReturnType<typeof getMedia>;

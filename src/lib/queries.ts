@@ -530,3 +530,16 @@ export const sendInvitation=async(role:Role,email:string,agencyId:string)=>{
 
   return response
 }
+
+export const getMedia=async(subaccountId:string)=>{
+  const response=db.subAccount.findUnique({
+    where:{
+      id:subaccountId
+    },
+    include:{
+      Media:true
+    }
+  })
+
+  return response
+}
