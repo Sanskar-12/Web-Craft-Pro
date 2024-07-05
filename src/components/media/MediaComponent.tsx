@@ -8,6 +8,8 @@ import {
   CommandList,
 } from "../ui/command";
 import { FolderSearch } from "lucide-react";
+import UploadButton from "./upload-button";
+import MediaCard from "./media-card";
 
 interface MediaComponentProps {
   data: GetMediaFiles;
@@ -19,7 +21,10 @@ const MediaComponent = ({ data, subaccountId }: MediaComponentProps) => {
     <div className="flex flex-col gap-4 h-full w-full">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl">Media Bucket</h1>
-        {/* Component */}
+        {/* Upload Button Component */}
+        <UploadButton
+          subaccountId={subaccountId}
+        />
       </div>
       <Command className="bg-transparent">
         <CommandInput placeholder="Search for file name..." />
@@ -33,6 +38,9 @@ const MediaComponent = ({ data, subaccountId }: MediaComponentProps) => {
                   className="p-0 max-w-[300px] w-full rounded-lg !bg-transparent !font-medium !text-white"
                 >
                   {/* MediaCard */}
+                  <MediaCard
+                    file={file}
+                  />
                 </CommandItem>
               ))}
               {!data?.Media.length && (
