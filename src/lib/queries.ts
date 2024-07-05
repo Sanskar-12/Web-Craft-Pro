@@ -566,3 +566,38 @@ export const deleteMedia=async(mediaId:string)=>{
 
   return response
 }
+
+export const getPipeLineDetails=async(pipelineId:string)=>{
+  const response=await db.pipeline.findUnique({
+    where:{
+      id:pipelineId
+    }
+  })
+
+  return response
+}
+
+export const getLanesWithTicketsAndTags=async(pipelineId:string)=>{
+  const response=await db.lane.findMany({
+    where:{
+      id:pipelineId
+    },
+    orderBy:{
+      order:"asc"
+    },
+    include:{
+      Tickets:{
+        orderBy:{
+          order:"asc"
+        },
+        include:{
+          Tags:true,
+          Assigned:true,
+          Customer:true
+        }
+      }
+    }
+  })
+
+  return response
+}
