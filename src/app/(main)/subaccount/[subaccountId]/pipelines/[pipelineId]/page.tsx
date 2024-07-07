@@ -1,32 +1,64 @@
-import { db } from "@/lib/db";
-import { getLanesWithTicketsAndTags, getPipeLineDetails } from "@/lib/queries";
-import { LaneDetail } from "@/lib/types";
-import { redirect } from "next/navigation";
+import PipelineInfoBar from '@/components/pipeline-info-bar/pipline-info-bar'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { db } from '@/lib/db'
+import { getLanesWithTicketAndTags, getPipelineDetails } from '@/lib/queries'
 
-interface PipelineIdPageProps {
-  params: {
-    subaccountId: string;
-    pipelineId: string;
-  };
+import { LaneDetail } from '@/lib/types'
+import { redirect } from 'next/navigation'
+import React from 'react'
+
+type Props = {
+  params: { subaccountId: string; pipelineId: string }
 }
 
-const PipelineIdPage = async ({
-  params: { subaccountId, pipelineId },
-}: PipelineIdPageProps) => {
-  const pipelineDetails = await getPipeLineDetails(pipelineId);
-
+const PipelinePage = async ({ params }: Props) => {
+  const pipelineDetails = await getPipelineDetails(params.pipelineId)
   if (!pipelineDetails)
-    return redirect(`/subaccount/${subaccountId}/pipelines`);
+    return redirect(`/subaccount/${params.subaccountId}/pipelines`)
 
   const pipelines = await db.pipeline.findMany({
-    where: {
-      subAccountId: subaccountId,
-    },
-  });
+    where: { subAccountId: params.subaccountId },
+  })
 
-  const lanes = (await getLanesWithTicketsAndTags(pipelineId)) as LaneDetail[];
+  const lanes = (await getLanesWithTicketAndTags(
+    params.pipelineId
+  )) as LaneDetail[]
 
-  return <div>PipelineIdPage</div>;
-};
+  return (
+    <Tabs
+      defaultValue="view"
+      className="w-full"
+    >
+      <TabsList className="bg-transparent border-b-2 h-16 w-full justify-between mb-4">
+        <PipelineInfoBar
+          pipelineId={params.pipelineId}
+          subAccountId={params.subaccountId}
+          pipelines={pipelines}
+        />
+        <div>
+          <TabsTrigger value="view">Pipeline View</TabsTrigger>
+          <TabsTrigger value="settings">Settings</TabsTrigger>
+        </div>
+      </TabsList>
+      {/* <TabsContent value="view">
+        <PipelineView
+          lanes={lanes}
+          pipelineDetails={pipelineDetails}
+          pipelineId={params.pipelineId}
+          subaccountId={params.subaccountId}
+          updateLanesOrder={updateLanesOrder}
+          updateTicketsOrder={updateTicketsOrder}
+        />
+      </TabsContent>
+      <TabsContent value="settings">
+        <PipelineSettings
+          pipelineId={params.pipelineId}
+          pipelines={pipelines}
+          subaccountId={params.subaccountId}
+        />
+      </TabsContent> */}
+    </Tabs>
+  )
+}
 
-export default PipelineIdPage;
+export default PipelinePage
