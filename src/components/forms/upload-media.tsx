@@ -57,7 +57,7 @@ const UploadMediaForm = ({ subaccountId }: UploadMediaFormProps) => {
         subaccountId,
       });
 
-      toast({ title: "Succes", description: "Uploaded media" });
+      toast({ title: "Success", description: "Uploaded media" });
       router.refresh();
     } catch (error) {
       console.log(error);

@@ -1,4 +1,5 @@
 import PipelineInfoBar from '@/components/pipeline-info-bar/pipline-info-bar'
+import PipelineSettings from '@/components/pipeline-settings/pipeline-settings'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { db } from '@/lib/db'
 import { getLanesWithTicketAndTags, getPipelineDetails } from '@/lib/queries'
@@ -40,23 +41,16 @@ const PipelinePage = async ({ params }: Props) => {
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </div>
       </TabsList>
-      {/* <TabsContent value="view">
-        <PipelineView
-          lanes={lanes}
-          pipelineDetails={pipelineDetails}
-          pipelineId={params.pipelineId}
-          subaccountId={params.subaccountId}
-          updateLanesOrder={updateLanesOrder}
-          updateTicketsOrder={updateTicketsOrder}
-        />
+      <TabsContent value='view'>
+
       </TabsContent>
-      <TabsContent value="settings">
+      <TabsContent value='settings'>
         <PipelineSettings
           pipelineId={params.pipelineId}
-          pipelines={pipelines}
           subaccountId={params.subaccountId}
+          pipelines={pipelines}
         />
-      </TabsContent> */}
+        </TabsContent>
     </Tabs>
   )
 }
