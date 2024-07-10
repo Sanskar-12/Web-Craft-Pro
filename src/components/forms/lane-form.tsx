@@ -13,6 +13,18 @@ import {
   saveActivityLogsNotification,
   upsertLane,
 } from "@/lib/queries";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import Loading from "../loading/loading";
 
 interface LaneFormProps {
   defaultData?: Lane;
@@ -81,7 +93,40 @@ const LaneForm = ({ defaultData, pipelineId }: LaneFormProps) => {
     setClose();
   };
 
-  return <div>LaneForm</div>;
+  return (
+    <Card className="w-full ">
+      <CardHeader>
+        <CardTitle>Lane Details</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormField
+              disabled={isLoading}
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Lane Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Lane Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button className="w-20 mt-4" disabled={isLoading} type="submit">
+              {form.formState.isSubmitting ? <Loading /> : "Save"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default LaneForm;
