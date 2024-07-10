@@ -9,9 +9,11 @@ import {
   User,
 } from '@prisma/client'
 import {
+  _getTicketsWithAllRelations,
   getAuthUserDetails,
   getMedia,
   getPipelineDetails,
+  getTicketWithTags,
   getUserPermissions,
 } from './queries'
 import { db } from './db'
@@ -89,4 +91,10 @@ export const CreateFunnelFormSchema = z.object({
 
 export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
   typeof getPipelineDetails
+>
+
+export type TicketWithTags = Prisma.PromiseReturnType<typeof getTicketWithTags>
+
+export type TicketDetails = Prisma.PromiseReturnType<
+  typeof _getTicketsWithAllRelations
 >

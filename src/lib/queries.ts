@@ -664,3 +664,43 @@ export const upsertLane = async (lane: Prisma.LaneUncheckedCreateInput) => {
 
   return response;
 };
+
+export const deleteLane=async(laneId:string)=>{
+  const response=await db.lane.delete({
+    where:{
+      id:laneId
+    }
+  })
+
+  return response
+}
+
+export const getTicketWithTags=async(pipelineId:string)=>{
+  const response=await db.ticket.findMany({
+    where:{
+      Lane:{
+        pipelineId
+      }
+    },
+    include:{
+      Tags:true,
+      Assigned:true,
+      Customer:true
+    }
+  })
+
+  return response
+}
+
+export const _getTicketsWithAllRelations = async (laneId: string) => {
+  const response = await db.ticket.findMany({
+    where: { laneId: laneId },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Lane: true,
+      Tags: true,
+    },
+  })
+  return response
+}
