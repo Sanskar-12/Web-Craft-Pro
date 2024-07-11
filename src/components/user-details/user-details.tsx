@@ -2,7 +2,7 @@
 
 import {
   AuthUserWithAgencySigebarOptionsSubAccounts,
-  UserWithPermissionAndSubAccounts,
+  UserWithPermissionsAndSubAccounts,
 } from "@/lib/types";
 import { useModal } from "@/providers/modal-provider";
 import { SubAccount, User } from "@prisma/client";
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import {
-  chageUserPermission,
+  changeUserPermissions,
   getAuthUserDetails,
   getUserPermissions,
   saveActivityLogsNotification,
@@ -59,7 +59,7 @@ interface UserDetailsProps {
 
 const UserDetails = ({ id, type, userData, subAccounts }: UserDetailsProps) => {
   const [subAccountPermissions, setSubAccountsPermissions] =
-    useState<UserWithPermissionAndSubAccounts | null>(null);
+    useState<UserWithPermissionsAndSubAccounts | null>(null);
 
   const { data, setClose } = useModal();
   const [roleState, setRoleState] = useState("");
@@ -68,7 +68,6 @@ const UserDetails = ({ id, type, userData, subAccounts }: UserDetailsProps) => {
     useState<AuthUserWithAgencySigebarOptionsSubAccounts | null>(null);
   const { toast } = useToast();
   const router = useRouter();
-
 
   useEffect(() => {
     if (data?.user) {
@@ -131,7 +130,7 @@ const UserDetails = ({ id, type, userData, subAccounts }: UserDetailsProps) => {
     if (!data.user?.email) return;
     setLoadingPermissions(true);
 
-    const response = await chageUserPermission(
+    const response = await changeUserPermissions(
       permissionId ? permissionId : v4(),
       data.user.email,
       subaccountId,

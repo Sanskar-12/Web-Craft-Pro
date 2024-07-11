@@ -2,7 +2,7 @@
 
 import {
   deleteSubAccount,
-  getSubAccountDetails,
+  getSubaccountDetails,
   saveActivityLogsNotification,
 } from "@/lib/queries";
 import { useRouter } from "next/navigation";
@@ -18,7 +18,7 @@ const DeleteButton = ({ subaccountId }: DeleteButtonProps) => {
     <div
       className="text-white"
       onClick={async () => {
-        const response = await getSubAccountDetails(subaccountId);
+        const response = await getSubaccountDetails(subaccountId);
         await saveActivityLogsNotification({
           agencyId: undefined,
           description: `Deleted a subaccount | ${response?.name}`,

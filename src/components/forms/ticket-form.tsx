@@ -13,6 +13,30 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "../ui/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ChevronsUpDownIcon, User2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
+import { Command, CommandEmpty } from "../ui/command";
+import { CommandInput } from "cmdk";
 
 interface TicketFormProps {
   laneId: string;
@@ -99,14 +123,14 @@ const TicketForm = ({
         agencyId: undefined,
         description: `Updated a ticket | ${response?.name}`,
         subaccountId,
-      })
+      });
 
       toast({
-        title: 'Success',
-        description: 'Saved  details',
-      })
-      if (response) getNewTicket(response)
-      router.refresh()
+        title: "Success",
+        description: "Saved  details",
+      });
+      if (response) getNewTicket(response);
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -114,10 +138,150 @@ const TicketForm = ({
         description: "Could not save pipeline details",
       });
     }
-    setClose()
+    setClose();
   };
 
-  return <div>TicketForm</div>;
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Ticket Details</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormField
+              disabled={isLoading}
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ticket Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              disabled={isLoading}
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              disabled={isLoading}
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ticket Value</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Value" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <h3>Add tags</h3>
+            {/*WIP: Tag Creator */}
+            <FormLabel>Assigned To Team Member</FormLabel>
+            <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage alt="contact" />
+                        <AvatarFallback className="bg-primary text-sm text-white">
+                          <User2 size={14} />
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <span className="text-sm text-muted-foreground">
+                        Not Assigned
+                      </span>
+                    </div>
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {allTeamMembers.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage alt="contact" src={member.avatarUrl} />
+                        <AvatarFallback className="bg-primary text-sm text-white">
+                          <User2 size={14} />
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <span className="text-sm text-muted-foreground">
+                        {member.name}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormLabel>Customer</FormLabel>
+            <Popover>
+              <PopoverTrigger asChild className="w-full">
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="justify-between"
+                >
+                  {contact
+                    ? contactList.find((c) => c.id === contact)?.name
+                    : "Select Customer..."}
+                  <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[400px] p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Search..."
+                    className="h-9"
+                    value={search}
+                    onChangeCapture={async (value) => {
+                      //@ts-ignore
+                      setSearch(value.target.value);
+                      if (saveTimerRef.current) {
+                        clearTimeout(saveTimerRef.current);
+                        saveTimerRef.current = setTimeout(async () => {
+                          const response = await searchContacts(
+                            //@ts-ignore
+                            value.target.value
+                          );
+                          setContactList(response);
+                          setSearch("");
+                        }, 1000);
+                      }
+                    }}
+                  />
+                  <CommandEmpty>No Customer found.</CommandEmpty>
+
+                  {/* Command Group TODO */}
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
 };
 
 export default TicketForm;

@@ -29,9 +29,9 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Edit, MoreVertical, PlusCircleIcon, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useMemo } from "react";
-// import PipelineTicket from './pipeline-ticket'
 import CustomModal from "../custommodal/custom-modal";
 import TicketForm from "../forms/ticket-form";
+import PipelineTicket from "../pipeline-ticket/pipeline-ticket";
 
 interface PipelaneLaneProps {
   setAllTickets: Dispatch<SetStateAction<TicketWithTags>>;
@@ -146,7 +146,6 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                     className=" h-14 backdrop-blur-lg dark:bg-background/40 bg-slate-200/60  absolute top-0 left-0 right-0 z-10 "
                   >
                     <div className="h-full flex items-center p-4 justify-between cursor-grab border-b-[1px] ">
-                      {/* {laneDetails.order} */}
                       <div className="flex items-center w-full gap-2">
                         <div
                           className={cn("w-4 h-4 rounded-full")}
@@ -180,15 +179,14 @@ const PipelineLane: React.FC<PipelaneLaneProps> = ({
                           className="mt-2"
                         >
                           {tickets.map((ticket, index) => (
-                            <div key={ticket.id}></div>
-                            // <PipelineTicket
-                            //   allTickets={allTickets}
-                            //   setAllTickets={setAllTickets}
-                            //   subaccountId={subaccountId}
-                            //   ticket={ticket}
-                            //   key={ticket.id.toString()}
-                            //   index={index}
-                            // />
+                            <PipelineTicket
+                              allTickets={allTickets}
+                              setAllTickets={setAllTickets}
+                              subaccountId={subaccountId}
+                              ticket={ticket}
+                              key={ticket.id.toString()}
+                              index={index}
+                            />
                           ))}
                           {provided.placeholder}
                         </div>
