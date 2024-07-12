@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const AgencyPage = ({params}:{params:{agencyId:string}}) => {
+const AgencyPage = ({ params }: { params: { agencyId: string } }) => {
   return (
-    <div>{params.agencyId}</div>
-  )
-}
+    <div>
+      {params.agencyId}
+      Agency
+    </div>
+  );
+};
 
-export default AgencyPage
+export default AgencyPage;

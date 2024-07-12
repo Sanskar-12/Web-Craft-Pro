@@ -13,7 +13,12 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "../ui/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import {
   Form,
   FormControl,
@@ -31,12 +36,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ChevronsUpDownIcon, User2 } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../ui/avatar";
+import {
+  CheckIcon,
+  ChevronsUpDownIcon,
+  User2,
+} from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../ui/popover";
 import { Button } from "../ui/button";
-import { Command, CommandEmpty } from "../ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "../ui/command";
 import { CommandInput } from "cmdk";
+import { cn } from "@/lib/utils";
+import Loading from "../loading/loading";
 
 interface TicketFormProps {
   laneId: string;
@@ -57,9 +81,11 @@ const TicketForm = ({
   const [contactList, setContactList] = useState<Contact[]>([]);
   // saveTimerRef for debouching for search
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const [allTeamMembers, setAllTeamMembers] = useState<User[]>([]);
+  const [allTeamMembers, setAllTeamMembers] = useState<User[]>(
+    [],
+  );
   const [assignedTo, setAssignedTo] = useState(
-    defaultData.ticket?.Assigned?.id || ""
+    defaultData.ticket?.Assigned?.id || "",
   );
 
   const form = useForm<z.infer<typeof TicketFormSchema>>({
@@ -77,7 +103,8 @@ const TicketForm = ({
   useEffect(() => {
     if (subaccountId) {
       const fetchData = async () => {
-        const response = await getSubaccountTeamMembers(subaccountId);
+        const response =
+          await getSubaccountTeamMembers(subaccountId);
         if (response) setAllTeamMembers(response);
       };
       fetchData();
@@ -97,7 +124,7 @@ const TicketForm = ({
 
       const fetchData = async () => {
         const response = await searchContacts(
-          defaultData.ticket?.Customer?.name as string
+          defaultData.ticket?.Customer?.name as string,
         );
         setContactList(response);
       };
@@ -105,7 +132,9 @@ const TicketForm = ({
     }
   }, [defaultData]);
 
-  const onSubmit = async (values: z.infer<typeof TicketFormSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof TicketFormSchema>,
+  ) => {
     if (!laneId) return;
     try {
       const response = await upsertTicket(
@@ -116,7 +145,7 @@ const TicketForm = ({
           assignedUserId: assignedTo,
           ...(contact ? { customerId: contact } : {}),
         },
-        tags
+        tags,
       );
 
       await saveActivityLogsNotification({
@@ -174,7 +203,10 @@ const TicketForm = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Description" {...field} />
+                    <Textarea
+                      placeholder="Description"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -197,7 +229,10 @@ const TicketForm = ({
             <h3>Add tags</h3>
             {/*WIP: Tag Creator */}
             <FormLabel>Assigned To Team Member</FormLabel>
-            <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
+            <Select
+              onValueChange={setAssignedTo}
+              defaultValue={assignedTo}
+            >
               <SelectTrigger>
                 <SelectValue
                   placeholder={
@@ -221,7 +256,10 @@ const TicketForm = ({
                   <SelectItem key={member.id} value={member.id}>
                     <div className="flex items-center gap-2">
                       <Avatar className="w-8 h-8">
-                        <AvatarImage alt="contact" src={member.avatarUrl} />
+                        <AvatarImage
+                          alt="contact"
+                          src={member.avatarUrl}
+                        />
                         <AvatarFallback className="bg-primary text-sm text-white">
                           <User2 size={14} />
                         </AvatarFallback>
@@ -244,7 +282,8 @@ const TicketForm = ({
                   className="justify-between"
                 >
                   {contact
-                    ? contactList.find((c) => c.id === contact)?.name
+                    ? contactList.find((c) => c.id === contact)
+                        ?.name
                     : "Select Customer..."}
                   <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -260,23 +299,63 @@ const TicketForm = ({
                       setSearch(value.target.value);
                       if (saveTimerRef.current) {
                         clearTimeout(saveTimerRef.current);
-                        saveTimerRef.current = setTimeout(async () => {
-                          const response = await searchContacts(
-                            //@ts-ignore
-                            value.target.value
-                          );
-                          setContactList(response);
-                          setSearch("");
-                        }, 1000);
+                        saveTimerRef.current = setTimeout(
+                          async () => {
+                            const response =
+                              await searchContacts(
+                                //@ts-ignore
+                                value.target.value,
+                              );
+                            setContactList(response);
+                            setSearch("");
+                          },
+                          1000,
+                        );
                       }
                     }}
                   />
-                  <CommandEmpty>No Customer found.</CommandEmpty>
-
-                  {/* Command Group TODO */}
+                  <CommandEmpty>
+                    No Customer found.
+                  </CommandEmpty>
+                  <CommandGroup>
+                    {contactList.map((c) => (
+                      <CommandItem
+                        key={c.id}
+                        value={c.id}
+                        onSelect={(currentValue) => {
+                          setContact(
+                            currentValue === contact
+                              ? ""
+                              : currentValue,
+                          );
+                        }}
+                      >
+                        {c.name}
+                        <CheckIcon
+                          className={cn(
+                            "ml-auto h-4 w-4",
+                            contact === c.id
+                              ? "opacity-100"
+                              : "opacity-0",
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
                 </Command>
               </PopoverContent>
             </Popover>
+            <Button
+              className="w-20 mt-4"
+              disabled={isLoading}
+              type="submit"
+            >
+              {form.formState.isSubmitting ? (
+                <Loading />
+              ) : (
+                "Save"
+              )}
+            </Button>
           </form>
         </Form>
       </CardContent>
