@@ -31,6 +31,7 @@
     "@tremor/react": "^3.17.4",
     "@uploadthing/react": "^6.5.4",
     "@uploadthing/shared": "^6.7.5",
+    "autoprefixer": "^10.4.19",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^0.2.0",

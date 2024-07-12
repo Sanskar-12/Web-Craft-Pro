@@ -1,3 +1,5 @@
+"use client"
+
 import {
   getSubaccountTeamMembers,
   saveActivityLogsNotification,
@@ -61,6 +63,7 @@ import {
 import { CommandInput } from "cmdk";
 import { cn } from "@/lib/utils";
 import Loading from "../loading/loading";
+import TagCreator from "../tag-creator/tag-creator";
 
 interface TicketFormProps {
   laneId: string;
@@ -94,7 +97,7 @@ const TicketForm = ({
     defaultValues: {
       name: defaultData.ticket?.name || "",
       description: defaultData.ticket?.description || "",
-      value: String(defaultData.ticket?.value || 0),
+      value: String(defaultData.ticket?.value?.toString() || 0),
     },
   });
 
@@ -116,7 +119,7 @@ const TicketForm = ({
       form.reset({
         name: defaultData.ticket.name || "",
         description: defaultData.ticket?.description || "",
-        value: String(defaultData.ticket?.value || 0),
+        value: String(defaultData.ticket?.value?.toString() || 0),
       });
       if (defaultData.ticket.customerId) {
         setContact(defaultData.ticket.customerId);
@@ -227,7 +230,11 @@ const TicketForm = ({
               )}
             />
             <h3>Add tags</h3>
-            {/*WIP: Tag Creator */}
+            <TagCreator
+              subaccountId={subaccountId}
+              getSelectedTags={setTags}
+              defaultTags={defaultData.ticket?.Tags || []}            
+            />
             <FormLabel>Assigned To Team Member</FormLabel>
             <Select
               onValueChange={setAssignedTo}
