@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import {
   getSubaccountTeamMembers,
   saveActivityLogsNotification,
@@ -11,16 +10,11 @@ import { useModal } from "@/providers/modal-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Contact, Tag, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "../ui/use-toast";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import {
   Form,
   FormControl,
@@ -28,7 +22,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import {
@@ -37,77 +31,55 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../ui/avatar";
-import {
-  CheckIcon,
-  ChevronsUpDownIcon,
-  User2,
-} from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../ui/popover";
+} from "@/components/ui/select";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { CheckIcon, ChevronsUpDownIcon, User2 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
 } from "../ui/command";
-import { CommandInput } from "cmdk";
 import { cn } from "@/lib/utils";
-import Loading from "../loading/loading";
 import TagCreator from "../tag-creator/tag-creator";
+import Loading from "../loading/loading";
 
-interface TicketFormProps {
+type Props = {
   laneId: string;
   subaccountId: string;
   getNewTicket: (ticket: TicketWithTags[0]) => void;
-}
+};
 
-const TicketForm = ({
-  laneId,
-  subaccountId,
-  getNewTicket,
-}: TicketFormProps) => {
+const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
   const { data: defaultData, setClose } = useModal();
   const router = useRouter();
   const [tags, setTags] = useState<Tag[]>([]);
   const [contact, setContact] = useState("");
   const [search, setSearch] = useState("");
   const [contactList, setContactList] = useState<Contact[]>([]);
-  // saveTimerRef for debouching for search
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const [allTeamMembers, setAllTeamMembers] = useState<User[]>(
-    [],
-  );
+  const [allTeamMembers, setAllTeamMembers] = useState<User[]>([]);
   const [assignedTo, setAssignedTo] = useState(
-    defaultData.ticket?.Assigned?.id || "",
+    defaultData.ticket?.Assigned?.id || ""
   );
-
   const form = useForm<z.infer<typeof TicketFormSchema>>({
     mode: "onChange",
     resolver: zodResolver(TicketFormSchema),
     defaultValues: {
       name: defaultData.ticket?.name || "",
       description: defaultData.ticket?.description || "",
-      value: String(defaultData.ticket?.value?.toString() || 0),
+      value: String(defaultData.ticket?.value || 0),
     },
   });
-
   const isLoading = form.formState.isLoading;
 
   useEffect(() => {
     if (subaccountId) {
       const fetchData = async () => {
-        const response =
-          await getSubaccountTeamMembers(subaccountId);
+        const response = await getSubaccountTeamMembers(subaccountId);
         if (response) setAllTeamMembers(response);
       };
       fetchData();
@@ -119,15 +91,15 @@ const TicketForm = ({
       form.reset({
         name: defaultData.ticket.name || "",
         description: defaultData.ticket?.description || "",
-        value: String(defaultData.ticket?.value?.toString() || 0),
+        value: String(defaultData.ticket?.value || 0),
       });
-      if (defaultData.ticket.customerId) {
+      if (defaultData.ticket.customerId)
         setContact(defaultData.ticket.customerId);
-      }
 
       const fetchData = async () => {
         const response = await searchContacts(
-          defaultData.ticket?.Customer?.name as string,
+          //@ts-ignore
+          defaultData.ticket?.Customer?.name
         );
         setContactList(response);
       };
@@ -135,9 +107,7 @@ const TicketForm = ({
     }
   }, [defaultData]);
 
-  const onSubmit = async (
-    values: z.infer<typeof TicketFormSchema>,
-  ) => {
+  const onSubmit = async (values: z.infer<typeof TicketFormSchema>) => {
     if (!laneId) return;
     try {
       const response = await upsertTicket(
@@ -148,7 +118,7 @@ const TicketForm = ({
           assignedUserId: assignedTo,
           ...(contact ? { customerId: contact } : {}),
         },
-        tags,
+        tags
       );
 
       await saveActivityLogsNotification({
@@ -206,10 +176,7 @@ const TicketForm = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder="Description"
-                      {...field}
-                    />
+                    <Textarea placeholder="Description" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -233,13 +200,10 @@ const TicketForm = ({
             <TagCreator
               subaccountId={subaccountId}
               getSelectedTags={setTags}
-              defaultTags={defaultData.ticket?.Tags || []}            
+              defaultTags={defaultData.ticket?.Tags || []}
             />
             <FormLabel>Assigned To Team Member</FormLabel>
-            <Select
-              onValueChange={setAssignedTo}
-              defaultValue={assignedTo}
-            >
+            <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
               <SelectTrigger>
                 <SelectValue
                   placeholder={
@@ -259,21 +223,18 @@ const TicketForm = ({
                 />
               </SelectTrigger>
               <SelectContent>
-                {allTeamMembers.map((member) => (
-                  <SelectItem key={member.id} value={member.id}>
+                {allTeamMembers.map((teamMember) => (
+                  <SelectItem key={teamMember.id} value={teamMember.id}>
                     <div className="flex items-center gap-2">
                       <Avatar className="w-8 h-8">
-                        <AvatarImage
-                          alt="contact"
-                          src={member.avatarUrl}
-                        />
+                        <AvatarImage alt="contact" src={teamMember.avatarUrl} />
                         <AvatarFallback className="bg-primary text-sm text-white">
                           <User2 size={14} />
                         </AvatarFallback>
                       </Avatar>
 
                       <span className="text-sm text-muted-foreground">
-                        {member.name}
+                        {teamMember.name}
                       </span>
                     </div>
                   </SelectItem>
@@ -289,8 +250,7 @@ const TicketForm = ({
                   className="justify-between"
                 >
                   {contact
-                    ? contactList.find((c) => c.id === contact)
-                        ?.name
+                    ? contactList.find((c) => c.id === contact)?.name
                     : "Select Customer..."}
                   <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -304,26 +264,19 @@ const TicketForm = ({
                     onChangeCapture={async (value) => {
                       //@ts-ignore
                       setSearch(value.target.value);
-                      if (saveTimerRef.current) {
+                      if (saveTimerRef.current)
                         clearTimeout(saveTimerRef.current);
-                        saveTimerRef.current = setTimeout(
-                          async () => {
-                            const response =
-                              await searchContacts(
-                                //@ts-ignore
-                                value.target.value,
-                              );
-                            setContactList(response);
-                            setSearch("");
-                          },
-                          1000,
+                      saveTimerRef.current = setTimeout(async () => {
+                        const response = await searchContacts(
+                          //@ts-ignore
+                          value.target.value
                         );
-                      }
+                        setContactList(response);
+                        setSearch("");
+                      }, 1000);
                     }}
                   />
-                  <CommandEmpty>
-                    No Customer found.
-                  </CommandEmpty>
+                  <CommandEmpty>No Customer found.</CommandEmpty>
                   <CommandGroup>
                     {contactList.map((c) => (
                       <CommandItem
@@ -331,9 +284,7 @@ const TicketForm = ({
                         value={c.id}
                         onSelect={(currentValue) => {
                           setContact(
-                            currentValue === contact
-                              ? ""
-                              : currentValue,
+                            currentValue === contact ? "" : currentValue
                           );
                         }}
                       >
@@ -341,9 +292,7 @@ const TicketForm = ({
                         <CheckIcon
                           className={cn(
                             "ml-auto h-4 w-4",
-                            contact === c.id
-                              ? "opacity-100"
-                              : "opacity-0",
+                            contact === c.id ? "opacity-100" : "opacity-0"
                           )}
                         />
                       </CommandItem>
@@ -352,16 +301,8 @@ const TicketForm = ({
                 </Command>
               </PopoverContent>
             </Popover>
-            <Button
-              className="w-20 mt-4"
-              disabled={isLoading}
-              type="submit"
-            >
-              {form.formState.isSubmitting ? (
-                <Loading />
-              ) : (
-                "Save"
-              )}
+            <Button className="w-20 mt-4" disabled={isLoading} type="submit">
+              {form.formState.isSubmitting ? <Loading /> : "Save"}
             </Button>
           </form>
         </Form>

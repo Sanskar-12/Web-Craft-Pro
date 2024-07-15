@@ -1,4 +1,5 @@
 import BlurPage from "@/components/blur-page/blur-page";
+import CreateContactButton from "@/components/create-contact-btn/create-contact-btn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
 import { Contact, SubAccount, Ticket } from "@prisma/client";
+import { formatDate } from "date-fns/format"
 
 interface ContactPageProps {
   params: {
@@ -62,15 +64,16 @@ const ContactPage = async ({ params: { subaccountId } }: ContactPageProps) => {
 
   return (
     <BlurPage>
-      <h1 className="text-4xl">Contacts</h1>
+      <h1 className="text-4xl p-4">Contacts</h1>
       {/* Create Contact Button */}
+      <CreateContactButton subaccountId={subaccountId}/>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[200px]">Name</TableHead>
             <TableHead className="w-[300px]">Email</TableHead>
             <TableHead className="w-[200px]">Active</TableHead>
-            <TableHead>Created Date</TableHead>
+            <TableHead className="w-[200px]">Created Date</TableHead>
             <TableHead className="text-right">Total Value</TableHead>
           </TableRow>
         </TableHeader>
@@ -93,6 +96,7 @@ const ContactPage = async ({ params: { subaccountId } }: ContactPageProps) => {
                   <Badge className="bg-emerald-700">Active</Badge>
                 )}
               </TableCell>
+              <TableCell>{formatDate(contact.createdAt, 'MM/dd/yyyy')}</TableCell>
               <TableCell className="text-right">
                 {formatTotal(contact.Ticket)}
               </TableCell>
