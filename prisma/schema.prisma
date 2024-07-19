@@ -86,6 +86,7 @@ model Permission {
 model Agency {
   id String @id @default(uuid())
   connectAccountId String @default("")
+  customerId String @default("")
   name String 
   agencyLogo String @db.Text
   companyEmail String @db.Text
@@ -413,7 +414,7 @@ model Subscription {
   priceId              String
   customerId           String
   currentPeriodEndDate DateTime
-  subscritiptionId     String   @unique
+  subscriptionId     String   @unique
 
   agencyId String? @unique
   Agency   Agency? @relation(fields: [agencyId], references: [id])

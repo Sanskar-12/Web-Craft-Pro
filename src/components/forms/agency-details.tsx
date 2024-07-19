@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
@@ -72,7 +73,6 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
-
   const [deletingAgency, setDeletingAgency] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -104,7 +104,6 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
     try {
       let newUserData;
       let custId;
-
       if (!data?.id) {
         const bodyData = {
           email: values.companyEmail,
@@ -127,32 +126,46 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
             state: values.zipCode,
           },
         };
+
+        const { data } = await axios.post(
+          "/api/stripe/create-customer",
+          bodyData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        custId = data.customerId;
       }
-      //Wip: Cust id
 
       newUserData = await initUser({ role: "AGENCY_OWNER" });
+      if (!data?.customerId && !custId) return;
 
-      if (!data?.id) {
-        const response = await upsertAgency({
-          id: data?.id ? data.id : v4(),
-          address: values.address,
-          agencyLogo: values.agencyLogo,
-          city: values.city,
-          companyPhone: values.companyPhone,
-          country: values.country,
-          name: values.name,
-          state: values.state,
-          whiteLabel: values.whiteLabel,
-          zipCode: values.zipCode,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          companyEmail: values.companyEmail,
-          connectAccountId: "",
-          goal: 5,
-        });
-        toast({
-          title: "Created Agency",
-        });
+      const response = await upsertAgency({
+        id: data?.id ? data.id : v4(),
+        customerId: data?.customerId || custId || "",
+        address: values.address,
+        agencyLogo: values.agencyLogo,
+        city: values.city,
+        companyPhone: values.companyPhone,
+        country: values.country,
+        name: values.name,
+        state: values.state,
+        whiteLabel: values.whiteLabel,
+        zipCode: values.zipCode,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        companyEmail: values.companyEmail,
+        connectAccountId: "",
+        goal: 5,
+      });
+
+      toast({
+        title: "Created Agency",
+      });
+      if (data?.id) return router.refresh();
+      if (response) {
         return router.refresh();
       }
     } catch (error) {
@@ -160,7 +173,7 @@ const AgencyDetails = ({ data }: AgencyDetailsProps) => {
       toast({
         variant: "destructive",
         title: "Oppse!",
-        description: "could not create your agency ",
+        description: "could not create your agency",
       });
     }
   };
