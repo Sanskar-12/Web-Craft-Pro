@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Button } from "../ui/button";
+import CustomModal from "../custommodal/custom-modal";
+import SubscriptionFormWrapper from "../forms/subscription-form/subscription-form-wrapper";
 
 interface PricingCardProps {
   features: string[];
@@ -44,9 +46,25 @@ const PricingCard = ({
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan");
 
-  const handleManagePlan=()=>{
-
-  }
+  const handleManagePlan = async () => {
+    setOpen(
+      <CustomModal
+        title={"Manage Your Plan"}
+        subheading="You can change your plan at any time from the billings settings"
+      >
+        <SubscriptionFormWrapper
+          customerId={customerId}
+          planExists={planExists}
+        />
+      </CustomModal>,
+      async () => ({
+        plans: {
+          defaultPriceId: plan ? plan : "",
+          plans: prices,
+        },
+      })
+    );
+  };
 
   return (
     <Card className="flex flex-col justify-between lg:w-1/2">
@@ -73,7 +91,7 @@ const PricingCard = ({
                 {feature}
               </li>
             ))}
-        </ul>
+          </ul>
         </CardContent>
       </div>
       <CardFooter>
@@ -86,7 +104,7 @@ const PricingCard = ({
               </p>
             </div>
             <Button className="md:w-fit w-full" onClick={handleManagePlan}>
-                {buttonCta}
+              {buttonCta}
             </Button>
           </div>
         </Card>
