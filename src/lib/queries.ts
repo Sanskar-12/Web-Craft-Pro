@@ -826,3 +826,33 @@ export const upsertContact = async (
 
   return response;
 };
+
+export const getFunnels=async(subaccountId:string)=>{
+  const funnels=await db.funnel.findMany({
+    where:{
+      subAccountId:subaccountId
+    },
+    include:{
+      FunnelPages:true
+    }
+  })
+
+  return funnels
+}
+
+export const getFunnel=async(funnelId:string)=>{
+  const funnel=await db.funnel.findUnique({
+    where:{
+      id:funnelId
+    },
+    include:{
+      FunnelPages:{
+        orderBy:{
+          order:"asc"
+        }
+      }
+    }
+  })
+
+  return funnel
+}

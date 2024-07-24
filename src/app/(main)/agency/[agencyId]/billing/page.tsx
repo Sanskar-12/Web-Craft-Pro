@@ -35,7 +35,6 @@ const BillingPage = async ({ params: { agencyId } }: BillingPageProps) => {
     },
   });
 
-  console.log(agencySubscription)
 
   const prices = await stripe.prices.list({
     product: process.env.NEXT_PLURA_PRODUCT_ID,
