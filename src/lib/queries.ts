@@ -856,3 +856,19 @@ export const getFunnel=async(funnelId:string)=>{
 
   return funnel
 }
+
+export const updateFunnelProducts=async(
+  products:string,
+  funnelId:string
+)=>{
+  const data=await db.funnel.update({
+    where:{
+      id:funnelId
+    },
+    data:{
+      liveProducts:products
+    }
+  })
+
+  return data
+}

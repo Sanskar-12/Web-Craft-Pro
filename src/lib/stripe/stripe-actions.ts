@@ -32,7 +32,6 @@ export const subscriptionCreated = async (
       plan: subscription.plan.id,
     }
 
-    console.log(data)
 
     const res = await db.subscription.upsert({
       where: {
@@ -48,6 +47,7 @@ export const subscriptionCreated = async (
 }
 
 export const getConnectAccountProducts = async (stripeAccount: string) => {
+
   const products = await stripe.products.list(
     {
       limit: 50,
@@ -57,5 +57,6 @@ export const getConnectAccountProducts = async (stripeAccount: string) => {
       stripeAccount,
     }
   )
+
   return products.data
 }
