@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FunnelSettings from "@/components/funnel-setting/funnel-setting";
+import FunnelSteps from "@/components/funnel-steps/funnel-steps";
 
 interface FunnelIdPageProps {
   params: {
@@ -34,12 +35,12 @@ const FunnelIdPage = async ({
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="steps">
-          {/* <FunnelSteps
+          <FunnelSteps
             funnel={funnelPages}
             subaccountId={subaccountId}
             pages={funnelPages.FunnelPages}
             funnelId={funnelId}
-          /> */}
+          />
         </TabsContent>
         <TabsContent value="settings">
           <FunnelSettings
