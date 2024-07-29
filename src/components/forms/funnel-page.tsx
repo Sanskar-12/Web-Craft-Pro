@@ -208,7 +208,7 @@ const CreateFunnelPage = ({
                     );
                     toast({
                       title: "Success",
-                      description: "Saves Funnel Page Details",
+                      description: "Saved Funnel Page Details",
                     });
                     router.refresh();
                   }}

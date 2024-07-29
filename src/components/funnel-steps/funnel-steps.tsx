@@ -21,6 +21,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import Link from "next/link";
 import FunnelPagePlaceholder from "../icons/funnel-page-placeholder";
 import CreateFunnelPage from "../forms/funnel-page";
+import FunnelStepCard from "../funnel-step-card/funnel-step-card";
 
 interface FunnelStepsProps {
   funnel: FunnelsForSubAccount;
@@ -119,12 +120,12 @@ const FunnelSteps = ({
                           key={page.id}
                           onClick={() => setClickedPage(page)}
                         >
-                          {/* <FunnelStepCard
+                          <FunnelStepCard
                             funnelPage={page}
                             index={idx}
                             key={page.id}
                             activePage={page.id === clickedPage?.id}
-                          /> */}
+                          />
                         </div>
                       ))}
                     </div>
