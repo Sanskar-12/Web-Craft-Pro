@@ -1,3 +1,5 @@
+import FunnelEditorNavigation from "@/components/funnel-editor/funnel-editor-navigation"
+import FunnelEditorSidebar from "@/components/funnel-editor/funnel-editor-sidebar"
 import { db } from "@/lib/db"
 import EditorProvider from "@/providers/editor/editor-providers"
 import { redirect } from "next/navigation"
@@ -35,7 +37,15 @@ const EditorFunnelPageId =async ({params:{
         funnelId={funnelId}
         pageDetails={funnelPageDetails}
       > 
-        
+        <FunnelEditorNavigation
+          funnelId={funnelId}
+          funnelPageDetails={funnelPageDetails}
+          subaccountId={subaccountId}
+        />
+
+        <FunnelEditorSidebar
+          subaccountId={subaccountId}
+        />
       </EditorProvider>
     </div>
   )
