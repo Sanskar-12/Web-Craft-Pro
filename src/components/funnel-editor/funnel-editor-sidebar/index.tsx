@@ -6,6 +6,7 @@ import { useEditor } from "@/providers/editor/editor-providers";
 import clsx from "clsx";
 import TabList from "./tabs";
 import SettingsTab from "./tabs/settings-tab";
+import MediaBucketTab from "./tabs/media-bucket-tab";
 
 interface FunnelEditorSidebarProps {
   subaccountId: string;
@@ -45,6 +46,11 @@ const FunnelEditorSidebar = ({ subaccountId }: FunnelEditorSidebarProps) => {
                 </SheetDescription>
               </SheetHeader>
               <SettingsTab/>
+            </TabsContent>
+            <TabsContent value="Media">
+              <MediaBucketTab
+                subaccountId={subaccountId}
+              />
             </TabsContent>
           </div>
         </SheetContent>

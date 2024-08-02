@@ -60,7 +60,7 @@ const MediaCard = ({ file }: MediaCardProps) => {
             </div>
           </div>
 
-          <DropdownMenuContent>
+          <DropdownMenuContent className="z-50">
             <DropdownMenuLabel>Menu</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
