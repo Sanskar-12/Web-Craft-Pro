@@ -1,3 +1,4 @@
+import FunnelEditor from "@/components/funnel-editor/funnel-editor-main/funnel-editor"
 import FunnelEditorNavigation from "@/components/funnel-editor/funnel-editor-navigation"
 import FunnelEditorSidebar from "@/components/funnel-editor/funnel-editor-sidebar"
 import { db } from "@/lib/db"
@@ -42,6 +43,12 @@ const EditorFunnelPageId =async ({params:{
           funnelPageDetails={funnelPageDetails}
           subaccountId={subaccountId}
         />
+
+        <div className="h-full flex justify-center">
+          <FunnelEditor
+            funnelPageId={funnelPageId}
+          />
+        </div>
 
         <FunnelEditorSidebar
           subaccountId={subaccountId}
