@@ -1,12 +1,19 @@
 "use client";
 
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useEditor } from "@/providers/editor/editor-providers";
 import clsx from "clsx";
 import TabList from "./tabs";
 import SettingsTab from "./tabs/settings-tab";
 import MediaBucketTab from "./tabs/media-bucket-tab";
+import ComponentsTab from "./tabs/components-tab";
 
 interface FunnelEditorSidebarProps {
   subaccountId: string;
@@ -45,12 +52,19 @@ const FunnelEditorSidebar = ({ subaccountId }: FunnelEditorSidebarProps) => {
                   like.
                 </SheetDescription>
               </SheetHeader>
-              <SettingsTab/>
+              <SettingsTab />
             </TabsContent>
             <TabsContent value="Media">
-              <MediaBucketTab
-                subaccountId={subaccountId}
-              />
+              <MediaBucketTab subaccountId={subaccountId} />
+            </TabsContent>
+            <TabsContent value="Components">
+              <SheetHeader className="text-left p-6 ">
+                <SheetTitle>Components</SheetTitle>
+                <SheetDescription>
+                  You can drag and drop components on the canvas
+                </SheetDescription>
+              </SheetHeader>
+              <ComponentsTab />
             </TabsContent>
           </div>
         </SheetContent>

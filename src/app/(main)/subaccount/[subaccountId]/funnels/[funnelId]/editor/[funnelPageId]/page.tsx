@@ -1,4 +1,4 @@
-import FunnelEditor from "@/components/funnel-editor/funnel-editor-main/funnel-editor"
+import FunnelEditor from "@/components/funnel-editor/funnel-editor-main"
 import FunnelEditorNavigation from "@/components/funnel-editor/funnel-editor-navigation"
 import FunnelEditorSidebar from "@/components/funnel-editor/funnel-editor-sidebar"
 import { db } from "@/lib/db"

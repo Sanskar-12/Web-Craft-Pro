@@ -1,4 +1,4 @@
-import { DevicesTypes, EditorElement } from "./editor-providers"
+import {  DeviceTypes, EditorElement } from "./editor-providers"
 
 export type EditorAction =
   | {
@@ -37,7 +37,7 @@ export type EditorAction =
   | {
       type: 'CHANGE_DEVICE'
       payload: {
-        device: DevicesTypes
+        device: DeviceTypes
       }
     }
   | {
