@@ -9,6 +9,9 @@ import { ReactNode } from "react";
 import TextPlaceholder from "./text-placeholder";
 import ContainerPlaceholder from "./container-placeholder";
 import VideoPlaceholder from "./video-placeholder";
+import LinkPlaceholder from "./link-placeholder";
+import TwoColPlaceholder from "./two-col-placeholder";
+import ContactFormComponentPlaceholder from "./contact-form-placeholder";
 
 const ComponentsTab = () => {
   const elements: {
@@ -34,7 +37,25 @@ const ComponentsTab = () => {
         label: 'Video',
         id: 'video',
         group:"elements"
-    }
+    },
+    {
+      Component: <LinkPlaceholder />,
+      label: 'Link',
+      id: 'link',
+      group: 'elements',
+    },
+    {
+      Component: <TwoColPlaceholder />,
+      label: '2 Columns',
+      id: '2Col',
+      group: 'layout',
+    },
+    {
+      Component: <ContactFormComponentPlaceholder />,
+      label: 'Contact',
+      id: 'contactForm',
+      group: 'elements',
+    },
   ];
 
   return (

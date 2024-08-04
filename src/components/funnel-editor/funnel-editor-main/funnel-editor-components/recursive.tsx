@@ -2,6 +2,8 @@ import { EditorElement } from "@/providers/editor/editor-providers";
 import TextComponent from "./text";
 import Container from "./container";
 import VideoComponent from "./video";
+import LinkComponent from "./link";
+import ContactFormComponent from "./contact";
 
 interface RecursiveProps {
   element: EditorElement;
@@ -22,6 +24,14 @@ const Recursive = ({ element }: RecursiveProps) => {
     case "video":
       return <VideoComponent element={element} />;
 
+    case "2Col":
+      return <Container element={element} />;
+
+    case "link":
+      return <LinkComponent element={element} />;
+
+    case "contactForm":
+      return <ContactFormComponent element={element} />;
     default:
       return null;
   }
