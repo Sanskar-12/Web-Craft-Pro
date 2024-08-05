@@ -18,12 +18,6 @@ const TabList = () => {
       </TabsTrigger>
 
       <TabsTrigger
-        value="Layers"
-        className="w-10 h-10 p-0 data-[state=active]:bg-muted"
-      >
-        <SquareStackIcon />
-      </TabsTrigger>
-      <TabsTrigger
         value="Media"
         className="w-10 h-10 p-0 data-[state=active]:bg-muted"
       >

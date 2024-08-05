@@ -4,6 +4,7 @@ import Container from "./container";
 import VideoComponent from "./video";
 import LinkComponent from "./link";
 import ContactFormComponent from "./contact";
+import Checkout from "./payment";
 
 interface RecursiveProps {
   element: EditorElement;
@@ -32,6 +33,10 @@ const Recursive = ({ element }: RecursiveProps) => {
 
     case "contactForm":
       return <ContactFormComponent element={element} />;
+
+    case "paymentForm":
+      return <Checkout element={element} />;
+      
     default:
       return null;
   }

@@ -12,6 +12,7 @@ import VideoPlaceholder from "./video-placeholder";
 import LinkPlaceholder from "./link-placeholder";
 import TwoColPlaceholder from "./two-col-placeholder";
 import ContactFormComponentPlaceholder from "./contact-form-placeholder";
+import CheckoutPlaceholder from "./checkout-form-placeholder";
 
 const ComponentsTab = () => {
   const elements: {
@@ -33,28 +34,35 @@ const ComponentsTab = () => {
       group: "layout",
     },
     {
-        Component: <VideoPlaceholder />,
-        label: 'Video',
-        id: 'video',
-        group:"elements"
+      Component: <VideoPlaceholder />,
+      label: "Video",
+      id: "video",
+      group: "elements",
     },
     {
       Component: <LinkPlaceholder />,
-      label: 'Link',
-      id: 'link',
-      group: 'elements',
+      label: "Link",
+      id: "link",
+      group: "elements",
     },
     {
       Component: <TwoColPlaceholder />,
-      label: '2 Columns',
-      id: '2Col',
-      group: 'layout',
+      label: "2 Columns",
+      id: "2Col",
+      group: "layout",
     },
     {
       Component: <ContactFormComponentPlaceholder />,
-      label: 'Contact',
-      id: 'contactForm',
-      group: 'elements',
+      label: "Contact",
+      id: "contactForm",
+      group: "elements",
+    },
+
+    {
+      Component: <CheckoutPlaceholder />,
+      label: "Checkout",
+      id: "paymentForm",
+      group: "elements",
     },
   ];
 
