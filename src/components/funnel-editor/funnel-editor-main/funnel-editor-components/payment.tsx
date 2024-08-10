@@ -70,7 +70,9 @@ const Checkout = ({ element }: CheckoutProps) => {
             }
           );
 
+          
           const responseJson = await response.json();
+          console.log(responseJson)
 
           if (!responseJson) throw new Error("somethign went wrong");
           if (responseJson.error) {

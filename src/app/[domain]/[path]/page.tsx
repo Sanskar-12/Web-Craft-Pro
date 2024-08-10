@@ -1,36 +1,23 @@
 import FunnelEditor from "@/components/funnel-editor/funnel-editor-main";
-import { db } from "@/lib/db";
 import { getDomainContent } from "@/lib/queries";
 import EditorProvider from "@/providers/editor/editor-providers";
 import { notFound } from "next/navigation";
 
-interface HostedFunnelPageProps {
+interface PathPageProps {
   params: {
     domain: string;
+    path: string;
   };
 }
 
-const HostedFunnelPage = async ({
-  params: { domain },
-}: HostedFunnelPageProps) => {
+const PathPage = async ({ params: { domain, path } }: PathPageProps) => {
   const domainData = await getDomainContent(domain.slice(0, -1));
 
-  if (!domainData) return notFound();
+  const pageData = domainData?.FunnelPages.find(
+    (page) => page.pathName === path
+  );
 
-  const pageData = domainData.FunnelPages.find((page) => !page.pathName);
-
-  if (!pageData) return notFound();
-
-  await db.funnelPage.update({
-    where: {
-      id: pageData.id,
-    },
-    data: {
-      visits: {
-        increment: 1,
-      },
-    },
-  });
+  if (!pageData || !domainData) return notFound();
 
   return (
     <EditorProvider
@@ -43,4 +30,4 @@ const HostedFunnelPage = async ({
   );
 };
 
-export default HostedFunnelPage;
+export default PathPage;

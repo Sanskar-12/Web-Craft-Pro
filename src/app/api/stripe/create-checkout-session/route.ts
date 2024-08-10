@@ -28,6 +28,7 @@ export async function POST(req: Request) {
   }
 
   const subscriptionPriceExists = prices.find((price) => price.recurring)
+  
 
   try {
     const session = await stripe.checkout.sessions.create(
