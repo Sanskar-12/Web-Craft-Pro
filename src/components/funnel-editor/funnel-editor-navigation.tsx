@@ -1,6 +1,6 @@
 "use client";
 
-import { DevicesTypes, useEditor } from "@/providers/editor/editor-providers";
+import { DeviceTypes, useEditor } from "@/providers/editor/editor-providers";
 import { FunnelPage } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { FocusEventHandler, useEffect } from "react";
