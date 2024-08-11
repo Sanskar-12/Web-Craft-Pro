@@ -146,7 +146,7 @@ const FunnelEditorNavigation = ({
             onValueChange={(value) => {
               dispatch({
                 type: "CHANGE_DEVICE",
-                payload: { device: value as DevicesTypes },
+                payload: { device: value as DeviceTypes },
               });
             }}
           >
