@@ -9,8 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { ClipboardIcon, DollarSign } from "lucide-react";
+import {
+  ClipboardIcon,
+  Contact2,
+  DollarSign,
+  Goal,
+  ShoppingCart,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import { AreaChart } from "@tremor/react";
+import CircleProgress from "@/components/circle-progress";
 
 interface AgencyPageProps {
   params: { agencyId: string };
@@ -36,7 +45,7 @@ const AgencyPage = async ({ params: { agencyId } }: AgencyPageProps) => {
 
   if (!agencyDetails) return;
 
-  const subaccounts = db.subAccount.findMany({
+  const subaccounts = await db.subAccount.findMany({
     where: {
       agencyId,
     },
@@ -131,6 +140,111 @@ const AgencyPage = async ({ params: { agencyId } }: AgencyPageProps) => {
               Total revenue generated as reflected in your stripe dashboard.
             </CardContent>
             <DollarSign className="absolute right-4 top-4 text-muted-foreground" />
+          </Card>
+          <Card className="flex-1 relative">
+            <CardHeader>
+              <CardDescription>Potential Income</CardDescription>
+              <CardTitle>
+                {potentialIncome
+                  ? `${currency} ${potentialIncome.toFixed(2)}`
+                  : `$0.00`}
+              </CardTitle>
+              <small className="text-xs text-muted-foreground">
+                For the year {currentYear}
+              </small>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              This is how much you can close.
+            </CardContent>
+            <DollarSign className="absolute right-4 top-4 text-muted-foreground" />
+          </Card>
+          <Card className="flex-1 relative">
+            <CardHeader>
+              <CardDescription>Active Clients</CardDescription>
+              <CardTitle className="text-4xl">{subaccounts.length}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Reflects the number of sub accounts you own and manage.
+            </CardContent>
+            <Contact2 className="absolute right-4 top-4 text-muted-foreground" />
+          </Card>
+          <Card className="flex-1 relative">
+            <CardHeader>
+              <CardTitle>Agency Goal</CardTitle>
+              <CardDescription>
+                <p className="mt-2">
+                  Reflects the number of sub accounts you want to own and
+                  manage.
+                </p>
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <div className="flex flex-col w-full">
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground text-sm">
+                    Current: {subaccounts.length}
+                  </span>
+                  <span className="text-muted-foreground text-sm">
+                    Goal: {agencyDetails.goal}
+                  </span>
+                </div>
+                <Progress
+                  value={(subaccounts.length / agencyDetails.goal) * 100}
+                />
+              </div>
+            </CardFooter>
+            <Goal className="absolute right-4 top-4 text-muted-foreground" />
+          </Card>
+        </div>
+        <div className="flex gap-4 xl:!flex-row flex-col">
+          <Card className="p-4 flex-1">
+            <CardHeader>
+              <CardTitle>Transaction History</CardTitle>
+            </CardHeader>
+            <AreaChart
+              className="text-sm stroke-primary"
+              data={[
+                ...(totalClosedSessions || []),
+                ...(totalPendingSessions || []),
+              ]}
+              index="created"
+              categories={["amount_total"]}
+              colors={["primary"]}
+              yAxisWidth={30}
+              showAnimation={true}
+            />
+          </Card>
+          <Card className="xl:w-[400px] w-full">
+            <CardHeader>
+              <CardTitle>Conversions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CircleProgress
+                value={closingRate}
+                description={
+                  <>
+                    {sessions && (
+                      <div className="flex flex-col">
+                        Abandoned
+                        <div className="flex gap-2">
+                          <ShoppingCart className="text-rose-700" />
+                          {sessions.length}
+                        </div>
+                      </div>
+                    )}
+                    {totalClosedSessions && (
+                      <div className="felx flex-col">
+                        Won Carts
+                        <div className="flex gap-2">
+                          <ShoppingCart className="text-emerald-700" />
+                          {totalClosedSessions.length}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                }
+              />
+            </CardContent>
           </Card>
         </div>
       </div>

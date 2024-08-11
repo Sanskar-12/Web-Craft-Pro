@@ -10,8 +10,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
 import clsx from "clsx";
+import SubscriptionHelper from "@/components/subscription-helper/subscription-helper";
 
 interface BillingPageProps {
   params: {
@@ -34,7 +35,6 @@ const BillingPage = async ({ params: { agencyId } }: BillingPageProps) => {
       Subscription: true,
     },
   });
-
 
   const prices = await stripe.prices.list({
     product: process.env.NEXT_PLURA_PRODUCT_ID,
@@ -64,6 +64,11 @@ const BillingPage = async ({ params: { agencyId } }: BillingPageProps) => {
 
   return (
     <>
+      <SubscriptionHelper
+        prices={prices.data}
+        customerId={agencySubscription?.customerId || ""}
+        planExists={agencySubscription?.Subscription?.active === true}
+      />
       <h1 className="text-4xl p-4">Billing</h1>
       <Separator className="mb-6" />
       <h2 className="text-2xl p-4">Current Plan</h2>
@@ -105,24 +110,24 @@ const BillingPage = async ({ params: { agencyId } }: BillingPageProps) => {
               : "Starter"
           }
         />
-         {addOns.data.map((addOn) => (
+        {addOns.data.map((addOn) => (
           <PricingCard
             planExists={agencySubscription?.Subscription?.active === true}
             prices={prices.data}
-            customerId={agencySubscription?.customerId || ''}
+            customerId={agencySubscription?.customerId || ""}
             key={addOn.id}
             amt={
               //@ts-ignore
               addOn.default_price?.unit_amount
                 ? //@ts-ignore
                   `$${addOn.default_price.unit_amount / 100}`
-                : '$0'
+                : "$0"
             }
             buttonCta="Subscribe"
             description="Dedicated support line & teams channel for support"
             duration="/ month"
             features={[]}
-            title={'24/7 priority support'}
+            title={"24/7 priority support"}
             highlightTitle="Get support now!"
             highlightDescription="Get priority support and skip the long long with the click of a button."
           />
@@ -149,11 +154,11 @@ const BillingPage = async ({ params: { agencyId } }: BillingPageProps) => {
               <TableCell>{charge.date}</TableCell>
               <TableCell>
                 <p
-                  className={clsx('', {
-                    'text-emerald-500': charge.status.toLowerCase() === 'paid',
-                    'text-orange-600':
-                      charge.status.toLowerCase() === 'pending',
-                    'text-red-600': charge.status.toLowerCase() === 'failed',
+                  className={clsx("", {
+                    "text-emerald-500": charge.status.toLowerCase() === "paid",
+                    "text-orange-600":
+                      charge.status.toLowerCase() === "pending",
+                    "text-red-600": charge.status.toLowerCase() === "failed",
                   })}
                 >
                   {charge.status.toUpperCase()}
